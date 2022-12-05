@@ -1,0 +1,44 @@
+{
+    "name": "InputControls",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "7ad53989-aa43-4598-8d64-f6c8c87519e7",
+            "actions": [
+                {
+                    "name": "TelegraphInput",
+                    "type": "Button",
+                    "id": "ea3b5ac4-6276-406a-aaec-37ec40dd5cf7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3d171157-da72-4d7b-92aa-77389ade5a47",
+                    "path": "<Keyboard>/period",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TelegraphInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f96f4b1b-530f-4a05-9afa-10f1f1133d32",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TelegraphInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
