@@ -429,6 +429,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca71d6815f24ba24e8cf0cd11c96d423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClearedWord:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &734931933
 GameObject:
   m_ObjectHideFlags: 0
@@ -497,7 +500,7 @@ Canvas:
   m_GameObject: {fileID: 734931933}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 601518008}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -561,6 +564,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _outputGroup: {fileID: 1371882428}
   _outputPrefab: {fileID: 1075275839623103285, guid: 3b535bb19de295342a207c9fb23b8457, type: 3}
+  _possibleTargetWords:
+  - STOP
+  - IDEAS
+  - UMMMM
+  - MOUSE
+  - TEST
 --- !u!4 &1292692630
 Transform:
   m_ObjectHideFlags: 0

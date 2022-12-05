@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(MorseInterpreter))]
 public class MorsePrinter : MonoBehaviour
 {
     private MorseInterpreter _interpreter;
+
+    [Space]
+    public UnityEvent<string> OnClearedWord = new UnityEvent<string>();
 
     private string _currentWord = "";
 
@@ -34,9 +38,8 @@ public class MorsePrinter : MonoBehaviour
 
     public void ClearWord()
     {
-        GameManager.Instance.AddOutputToUI(_currentWord);
+        OnClearedWord.Invoke(_currentWord);
 
         _currentWord = "";
-        Debug.LogWarning("Cleared Current word from Printer");
     }
 }

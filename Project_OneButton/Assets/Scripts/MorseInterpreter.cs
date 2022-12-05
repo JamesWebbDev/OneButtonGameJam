@@ -173,16 +173,16 @@ public class MorseInterpreter : MonoBehaviour
     private static readonly int morseY = Animator.StringToHash("1011");
     private static readonly int morseZ = Animator.StringToHash("1100");
 
-    private static readonly int morse0 = Animator.StringToHash("01111");
-    private static readonly int morse1 = Animator.StringToHash("00111");
-    private static readonly int morse2 = Animator.StringToHash("00011");
-    private static readonly int morse3 = Animator.StringToHash("00001");
-    private static readonly int morse4 = Animator.StringToHash("00000");
-    private static readonly int morse5 = Animator.StringToHash("10000");
-    private static readonly int morse6 = Animator.StringToHash("11000");
-    private static readonly int morse7 = Animator.StringToHash("11100");
-    private static readonly int morse8 = Animator.StringToHash("11110");
-    private static readonly int morse9 = Animator.StringToHash("11111");
+    private static readonly int morse1 = Animator.StringToHash("01111");
+    private static readonly int morse2 = Animator.StringToHash("00111");
+    private static readonly int morse3 = Animator.StringToHash("00011");
+    private static readonly int morse4 = Animator.StringToHash("00001");
+    private static readonly int morse5 = Animator.StringToHash("00000");
+    private static readonly int morse6 = Animator.StringToHash("10000");
+    private static readonly int morse7 = Animator.StringToHash("11000");
+    private static readonly int morse8 = Animator.StringToHash("11100");
+    private static readonly int morse9 = Animator.StringToHash("11110");
+    private static readonly int morse0 = Animator.StringToHash("11111");
 
     #endregion
 

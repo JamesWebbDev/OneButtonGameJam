@@ -27,4 +27,13 @@ public static class Helper
             list[n] = value;
         }
     }
+
+    public static T GetRandom<T>(this List<T> list)
+    {
+        int count = list.Count;
+
+        int randIndex = rand.Next(count);
+
+        return list[randIndex];
+    }
 }
