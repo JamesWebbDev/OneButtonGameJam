@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(InputManager))]
 [RequireComponent(typeof(MorsePrinter))]
@@ -9,16 +10,25 @@ public class MorseInterpreter : MonoBehaviour
     private InputManager _inputManager;
     private MorsePrinter _printer;
 
+    public UnityEvent<char> OnNewLetter { get; private set; } = new UnityEvent<char>();
+    public UnityEvent OnClearWord { get; private set; } = new UnityEvent();
+
     private float _inputTime = 0;
     private string _currentLetter;
 
     private Coroutine _nextLetter;
+    private Coroutine _nextWord;
 
     [Header("Input Thresholds")]
     [Tooltip("Player must release input before this duration!")]
     [SerializeField] float _dotDuration = 0.1f;
     [Tooltip("Player must release input before this duration, MUST be greater than 'Dot Duration'!")]
     [SerializeField] float _dashDuration = 0.4f;
+    [Tooltip("Player must not input until this time has passed to start the next LETTER, MUST be greater than 'Dash Duration'!")]
+    [SerializeField] float _letterDuration = 1.5f;
+    [Tooltip("Player must not input until this time has passed to start the next WORD, MUST be greater than 'Letter Duration'!")]
+    [SerializeField] float _wordDuration = 3f;
+
 
     public Dictionary<int, char> MorseDictionary { get; private set; } = new Dictionary<int, char>()
     {
@@ -34,6 +44,7 @@ public class MorseInterpreter : MonoBehaviour
     {
         _inputManager = GetComponent<InputManager>();
         _printer = GetComponent<MorsePrinter>();
+        
 
         _inputManager.OnStartTelegraphInput += ReceiveInput;
     }
@@ -46,6 +57,18 @@ public class MorseInterpreter : MonoBehaviour
 
     void TelegraphDown()
     {
+        if (_nextLetter != null)
+        {
+            StopCoroutine(_nextLetter);
+            _nextLetter = null;
+        }
+
+        if (_nextWord != null)
+        {
+            StopCoroutine(_nextWord);
+            _nextWord = null;
+        }
+
         _inputTime = Time.realtimeSinceStartup;
     }
 
@@ -62,21 +85,58 @@ public class MorseInterpreter : MonoBehaviour
         if (releaseTime < _dotDuration) InputDot();
         else if (releaseTime < _dashDuration) InputDash();
         else FailedInput();
+
+        
     }
 
     IEnumerator TimeTillNextLetter()
     {
-        yield return null;
+        yield return Helper.GetWait(_letterDuration);
+
+        GetLetterFromMorseCode();
+
+        _nextWord = StartCoroutine(TimeTillNextWord());
     }
+
+    IEnumerator TimeTillNextWord()
+    {
+        yield return Helper.GetWait(_wordDuration);
+
+        OnClearWord.Invoke();
+
+        _nextWord = null;
+    }
+
+    void GetLetterFromMorseCode()
+    {
+        // Convert string to an INT and check if a key exists
+        int letterHash = Animator.StringToHash(_currentLetter);
+
+        if (MorseDictionary.TryGetValue(letterHash, out char letter))
+        {
+            OnNewLetter.Invoke(letter);
+        }
+        else
+        {
+            Debug.LogWarning("Letter identification failed! Resetting 'current letter'!");
+        }
+
+        _currentLetter = "";
+    }
+
 
     void InputDot()
     {
-        Debug.Log($"Input 'Dot' at {Time.realtimeSinceStartup}");
+        Debug.Log($"Input 'Dot'");
+        _currentLetter += 0;
+        _nextLetter = StartCoroutine(TimeTillNextLetter());
     }
 
     void InputDash()
     {
-        Debug.Log($"Input 'Dash' at {Time.realtimeSinceStartup}");
+        Debug.Log($"Input 'Dash'");
+        _currentLetter += 1;
+        _nextLetter = StartCoroutine(TimeTillNextLetter());
     }
 
     void FailedInput()
