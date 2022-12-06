@@ -849,6 +849,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1848933121}
   - component: {fileID: 1848933122}
+  - component: {fileID: 1848933124}
+  - component: {fileID: 1848933123}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -882,7 +884,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.8132447, b: 0.48584908, a: 1}
-  m_Intensity: 1.92
+  m_Intensity: 20
   m_Range: 4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -932,6 +934,53 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1848933123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848933120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19c1ca6448097e744b7839c04037cef7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitValue: 0.25
+  _targetWord: ON
+  _morseTarget: 
+  _onState: 0
+  OnChangedState:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1848933122}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1848933124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848933120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a009afca210021428d76eb033c00eb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dotDuration: 0.1
+  _dashDuration: 0.4
+  _letterDuration: 1.5
+  _wordDuration: 3
 --- !u!1 &1851282412
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(MorseInterpreter))]
 public class MorsePrinter : MonoBehaviour
 {
     private MorseInterpreter _interpreter;
@@ -16,6 +15,7 @@ public class MorsePrinter : MonoBehaviour
     private void Awake()
     {
         _interpreter = GetComponent<MorseInterpreter>();
+        if (_interpreter == null) _interpreter = FindObjectOfType<MorseInterpreter>();
     }
 
     private void OnEnable()

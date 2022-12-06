@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(InputManager))]
-[RequireComponent(typeof(MorsePrinter))]
 public class MorseInterpreter : MonoBehaviour
 {
     private InputManager _inputManager;
-    private MorsePrinter _printer;
 
     public UnityEvent<char> OnNewLetter { get; private set; } = new UnityEvent<char>();
     public UnityEvent OnClearWord { get; private set; } = new UnityEvent();
@@ -20,17 +17,19 @@ public class MorseInterpreter : MonoBehaviour
     private Coroutine _nextWord;
 
     [Header("Input Thresholds")]
+    [Tooltip("This is the standard length of a 'unit' used in morse code. Gap = 1u, Dot = 1u, Dash = 3u, Letter = 3u, Word = 7u")]
+    [SerializeField] float _inputDuration = 0.25f;
     [Tooltip("Player must release input before this duration!")]
-    [SerializeField] float _dotDuration = 0.1f;
+    private float _dotDuration = 0.25f;
     [Tooltip("Player must release input before this duration, MUST be greater than 'Dot Duration'!")]
-    [SerializeField] float _dashDuration = 0.4f;
+    private float _dashDuration = 0.75f;
     [Tooltip("Player must not input until this time has passed to start the next LETTER, MUST be greater than 'Dash Duration'!")]
-    [SerializeField] float _letterDuration = 1.5f;
+    private float _letterDuration = 0.75f;
     [Tooltip("Player must not input until this time has passed to start the next WORD, MUST be greater than 'Letter Duration'!")]
-    [SerializeField] float _wordDuration = 3f;
+    private float _wordDuration = 1.75f;
 
 
-    public Dictionary<int, char> MorseDictionary { get; private set; } = new Dictionary<int, char>()
+    public Dictionary<string, char> MorseDictionary { get; private set; } = new Dictionary<string, char>()
     {
         { morseA, 'A' }, { morseB, 'B' }, { morseC, 'C' }, { morseD, 'D' }, { morseE, 'E' }, { morseF, 'F' },
         { morseG, 'G' }, { morseH, 'H' }, { morseI, 'I' }, { morseJ, 'J' }, { morseK, 'K' }, { morseL, 'L' },
@@ -42,9 +41,15 @@ public class MorseInterpreter : MonoBehaviour
 
     private void Awake()
     {
-        _inputManager = GetComponent<InputManager>();
-        _printer = GetComponent<MorsePrinter>();
-        
+        _dotDuration = _inputDuration;
+        _dashDuration = _inputDuration * 3;
+        _letterDuration = _inputDuration * 3;
+        _wordDuration = _inputDuration * 7;
+    }
+
+    private void Start()
+    {
+        _inputManager = InputManager.Instance;
 
         _inputManager.OnStartTelegraphInput += ReceiveInput;
     }
@@ -109,10 +114,8 @@ public class MorseInterpreter : MonoBehaviour
 
     void GetLetterFromMorseCode()
     {
-        // Convert string to an INT and check if a key exists
-        int letterHash = Animator.StringToHash(_currentLetter);
-
-        if (MorseDictionary.TryGetValue(letterHash, out char letter))
+        // check if a key exists for this character
+        if (MorseDictionary.TryGetValue(_currentLetter, out char letter))
         {
             OnNewLetter.Invoke(letter);
         }
@@ -146,43 +149,43 @@ public class MorseInterpreter : MonoBehaviour
 
     #region Morse Dictionary And ALL Morse Code Keys
 
-    private static readonly int morseA = Animator.StringToHash("01");
-    private static readonly int morseB = Animator.StringToHash("1000");
-    private static readonly int morseC = Animator.StringToHash("1010");
-    private static readonly int morseD = Animator.StringToHash("100");
-    private static readonly int morseE = Animator.StringToHash("0");
-    private static readonly int morseF = Animator.StringToHash("0010");
-    private static readonly int morseG = Animator.StringToHash("110");
-    private static readonly int morseH = Animator.StringToHash("0000");
-    private static readonly int morseI = Animator.StringToHash("00");
-    private static readonly int morseJ = Animator.StringToHash("0111");
-    private static readonly int morseK = Animator.StringToHash("101");
-    private static readonly int morseL = Animator.StringToHash("0100");
-    private static readonly int morseM = Animator.StringToHash("11");
-    private static readonly int morseN = Animator.StringToHash("10");
-    private static readonly int morseO = Animator.StringToHash("111");
-    private static readonly int morseP = Animator.StringToHash("0110");
-    private static readonly int morseQ = Animator.StringToHash("1101");
-    private static readonly int morseR = Animator.StringToHash("010");
-    private static readonly int morseS = Animator.StringToHash("000");
-    private static readonly int morseT = Animator.StringToHash("1");
-    private static readonly int morseU = Animator.StringToHash("001");
-    private static readonly int morseV = Animator.StringToHash("0001");
-    private static readonly int morseW = Animator.StringToHash("011");
-    private static readonly int morseX = Animator.StringToHash("1001");
-    private static readonly int morseY = Animator.StringToHash("1011");
-    private static readonly int morseZ = Animator.StringToHash("1100");
+    private static readonly string morseA = "01";
+    private static readonly string morseB = "1000";
+    private static readonly string morseC = "1010";
+    private static readonly string morseD = "100";
+    private static readonly string morseE = "0";
+    private static readonly string morseF = "0010";
+    private static readonly string morseG = "110";
+    private static readonly string morseH = "0000";
+    private static readonly string morseI = "00";
+    private static readonly string morseJ = "0111";
+    private static readonly string morseK = "101";
+    private static readonly string morseL = "0100";
+    private static readonly string morseM = "11";
+    private static readonly string morseN = "10";
+    private static readonly string morseO = "111";
+    private static readonly string morseP = "0110";
+    private static readonly string morseQ = "1101";
+    private static readonly string morseR = "010";
+    private static readonly string morseS = "000";
+    private static readonly string morseT = "1";
+    private static readonly string morseU = "001";
+    private static readonly string morseV = "0001";
+    private static readonly string morseW = "011";
+    private static readonly string morseX = "1001";
+    private static readonly string morseY = "1011";
+    private static readonly string morseZ = "1100";
 
-    private static readonly int morse1 = Animator.StringToHash("01111");
-    private static readonly int morse2 = Animator.StringToHash("00111");
-    private static readonly int morse3 = Animator.StringToHash("00011");
-    private static readonly int morse4 = Animator.StringToHash("00001");
-    private static readonly int morse5 = Animator.StringToHash("00000");
-    private static readonly int morse6 = Animator.StringToHash("10000");
-    private static readonly int morse7 = Animator.StringToHash("11000");
-    private static readonly int morse8 = Animator.StringToHash("11100");
-    private static readonly int morse9 = Animator.StringToHash("11110");
-    private static readonly int morse0 = Animator.StringToHash("11111");
+    private static readonly string morse1 = "01111";
+    private static readonly string morse2 = "00111";
+    private static readonly string morse3 = "00011";
+    private static readonly string morse4 = "00001";
+    private static readonly string morse5 = "00000";
+    private static readonly string morse6 = "10000";
+    private static readonly string morse7 = "11000";
+    private static readonly string morse8 = "11100";
+    private static readonly string morse9 = "11110";
+    private static readonly string morse0 = "11111";
 
     #endregion
 
