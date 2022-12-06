@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[DefaultExecutionOrder(-1)] // This script runs FIRST
+[DefaultExecutionOrder(-5)] // This script runs FIRST
 public class InputManager : Singleton<InputManager>
 {
     // Events

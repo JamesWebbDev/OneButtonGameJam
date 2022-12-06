@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MorseInterpreter : MonoBehaviour
+[RequireComponent(typeof(InputManager))]
+public class MorseInterpreter : Singleton<MorseInterpreter>
 {
     private InputManager _inputManager;
 
@@ -28,6 +29,9 @@ public class MorseInterpreter : MonoBehaviour
     [Tooltip("Player must not input until this time has passed to start the next WORD, MUST be greater than 'Letter Duration'!")]
     private float _wordDuration = 1.75f;
 
+    [Header("Visual/Auditory")]
+    private AudioSource _telegraphActiveSound;
+
 
     public Dictionary<string, char> MorseDictionary { get; private set; } = new Dictionary<string, char>()
     {
@@ -39,17 +43,23 @@ public class MorseInterpreter : MonoBehaviour
         { morse4, '4' }, { morse5, '5' }, { morse6, '6' }, { morse7, '7' }, { morse8, '8' }, { morse9, '9' }
     };
 
-    private void Awake()
+    new void Awake()
     {
+        base.Awake();
+
+        _inputManager = GetComponent<InputManager>();
+
         _dotDuration = _inputDuration;
         _dashDuration = _inputDuration * 3;
         _letterDuration = _inputDuration * 3;
         _wordDuration = _inputDuration * 7;
+
+        _telegraphActiveSound = GetComponentInChildren<AudioSource>();
     }
 
     private void Start()
     {
-        _inputManager = InputManager.Instance;
+        //_inputManager = InputManager.Instance;
 
         _inputManager.OnStartTelegraphInput += ReceiveInput;
     }
@@ -74,6 +84,7 @@ public class MorseInterpreter : MonoBehaviour
             _nextWord = null;
         }
 
+        _telegraphActiveSound?.Play();
         _inputTime = Time.realtimeSinceStartup;
     }
 
@@ -91,7 +102,7 @@ public class MorseInterpreter : MonoBehaviour
         else if (releaseTime < _dashDuration) InputDash();
         else FailedInput();
 
-        
+        _telegraphActiveSound?.Stop();
     }
 
     IEnumerator TimeTillNextLetter()

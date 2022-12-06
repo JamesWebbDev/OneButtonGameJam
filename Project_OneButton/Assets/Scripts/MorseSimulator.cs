@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(MorseInterpreter))]
 public class MorseSimulator : MonoBehaviour
 {
     private MorseInterpreter _interpreter;
@@ -25,13 +24,16 @@ public class MorseSimulator : MonoBehaviour
     private Dictionary<char, string> _reversedMorseDictionary;
 
     [Space]
-    public UnityEvent<bool> OnChangedState = new UnityEvent<bool>();
+    public UnityEvent OnState = new UnityEvent();
+    [Space]
+    public UnityEvent OffState = new UnityEvent();
 
     private Queue<IEnumerator> _targetWordQueue;
 
     private void Awake()
     {
-        _interpreter = GetComponent<MorseInterpreter>();
+        _interpreter = MorseInterpreter.Instance;
+
         _reversedMorseDictionary = _interpreter.MorseDictionary.Reverse();
         SetMorseOrder();
 
@@ -40,13 +42,29 @@ public class MorseSimulator : MonoBehaviour
         _dashDuration = _unitValue * 3;
         _letterDuration = _unitValue * 3;
         _resetDuration = _unitValue * 7;
-
-        
     }
 
     private void Start()
     {
+        _interpreter = MorseInterpreter.Instance;
+
+        _reversedMorseDictionary = _interpreter.MorseDictionary.Reverse();
+        SetMorseOrder();
+
         SetTargetWordQueue();
+    }
+
+    public void SetTargetWordQueue()
+    {
+        _targetWordQueue = new Queue<IEnumerator>();
+
+        for (int i = 0; i < _morseTarget.Length; i++)
+        {
+            _targetWordQueue.Enqueue(GetCorrectTimer(_morseTarget[i]));
+        }
+
+        StartCoroutine(TimeNaut());
+
     }
 
     void SetMorseOrder()
@@ -101,18 +119,7 @@ public class MorseSimulator : MonoBehaviour
         return morseList.ToArray();
     }
 
-    void SetTargetWordQueue()
-    {
-        _targetWordQueue = new Queue<IEnumerator>();
-
-        for (int i = 0; i < _morseTarget.Length; i++)
-        {
-            _targetWordQueue.Enqueue(GetCorrectTimer(_morseTarget[i]));
-        }
-
-        StartCoroutine(TimeNaut());
-
-    }
+    
 
     IEnumerator GetCorrectTimer(int index)
     {
@@ -131,7 +138,7 @@ public class MorseSimulator : MonoBehaviour
     IEnumerator TimeDot()
     {
         _onState = true;
-        OnChangedState.Invoke(_onState);
+        OnState.Invoke();
 
         yield return Helper.GetWait(_dotDuration);
 
@@ -141,7 +148,7 @@ public class MorseSimulator : MonoBehaviour
     IEnumerator TimeDash()
     {
         _onState = true;
-        OnChangedState.Invoke(_onState);
+        OnState.Invoke();
 
         yield return Helper.GetWait(_dashDuration);
 
@@ -151,7 +158,7 @@ public class MorseSimulator : MonoBehaviour
     IEnumerator TimeLetter()
     {
         _onState = false;
-        OnChangedState.Invoke(_onState);
+        OffState.Invoke();
 
         yield return Helper.GetWait(_letterDuration);
 
@@ -169,7 +176,7 @@ public class MorseSimulator : MonoBehaviour
     IEnumerator TimeNaut()
     {
         _onState = false;
-        OnChangedState.Invoke(_onState);
+        OffState.Invoke();
 
         yield return Helper.GetWait(_nautDuration);
 
@@ -188,9 +195,6 @@ public class MorseSimulator : MonoBehaviour
 
     IEnumerator TimeReset()
     {
-        _onState = false;
-        OnChangedState.Invoke(_onState);
-
         yield return Helper.GetWait(_resetDuration);
 
         SetTargetWordQueue();

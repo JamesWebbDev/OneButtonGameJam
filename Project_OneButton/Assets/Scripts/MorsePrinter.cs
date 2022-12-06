@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(MorseInterpreter))]
 public class MorsePrinter : MonoBehaviour
 {
     private MorseInterpreter _interpreter;
 
     [Space]
-    public UnityEvent<string> OnClearedWord = new UnityEvent<string>();
+    public UnityEvent<string> OnFinishedWord = new UnityEvent<string>();
 
     private string _currentWord = "";
 
     private void Awake()
     {
         _interpreter = GetComponent<MorseInterpreter>();
-        if (_interpreter == null) _interpreter = FindObjectOfType<MorseInterpreter>();
     }
 
     private void OnEnable()
@@ -38,7 +38,7 @@ public class MorsePrinter : MonoBehaviour
 
     public void ClearWord()
     {
-        OnClearedWord.Invoke(_currentWord);
+        OnFinishedWord.Invoke(_currentWord);
 
         _currentWord = "";
     }
