@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
@@ -10,9 +11,8 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] List<MorseGoal> _goals;
     private Queue<MorseGoal> _goalsQueue;
     private MorseGoal _currentGoal;
-    
 
-	[SerializeField] List<string> _possibleTargetWords;
+    public UnityEvent OnFailedWord = new UnityEvent();
 
 	private MorsePrinter _printer;
 
@@ -45,13 +45,6 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         EnableNextGoal();
-    }
-
-    void GetNewTargetWord()
-    {
-		_targetWord = _possibleTargetWords.GetRandom();
-
-        Debug.LogWarning($"The target word is '{_targetWord}'!");
     }
 
     public void EnableNextGoal()
@@ -94,6 +87,7 @@ public class GameManager : Singleton<GameManager>
         else
         {
             Debug.Log($"Words don't MATCH {submittedWord} != {_targetWord}!! Try Again!");
+            OnFailedWord.Invoke();
         }
     }
 

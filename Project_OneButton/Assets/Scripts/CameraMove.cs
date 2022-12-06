@@ -4,40 +4,34 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour
 {
-    public float speed = 1.0f;
-    public float rotationSpeed;
-    [SerializeField] Transform target;
+    private Transform _setTransform;
+    public float _moveTime = 2f;
 
-    private bool isMoving = false;
-
-    void Start()
+    public void MovingCamera(Transform t)
     {
-        
+        _setTransform = t;
+
+        StartCoroutine(MoveCameraToTransform());
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator MoveCameraToTransform()
     {
-        LightsOn();
-    }
+        Vector3 currentPos = transform.position;
+        Vector3 targetPos = _setTransform.position;
+        Quaternion currentRot = transform.rotation;
+        Quaternion targetRot = _setTransform.rotation;
 
-    public void SetMoving(bool result)
-    {
-        isMoving = result;
-    }
-    public void LightsOn()
-    {
-        if (!isMoving)        
-            return;        
-        
-        var step = speed * Time.deltaTime;
-        var rotationStep = rotationSpeed * Time.deltaTime;
-        Vector3 targetDirection = target.position - transform.position;
+        float normalisedTime = 0;
 
-        transform.position = Vector3.MoveTowards(transform.position, target.position, step);
-        Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, step, 0.0f); 
+        while (normalisedTime < 1f)
+        {
+            transform.position = Vector3.Lerp(currentPos, targetPos, normalisedTime);
+            transform.rotation = Quaternion.Lerp(currentRot, targetRot, normalisedTime);
 
-        transform.rotation = Quaternion.LookRotation(newDirection);
-       
+            normalisedTime += Time.deltaTime / _moveTime;
+            yield return null;
+        }
+
+        transform.SetPositionAndRotation(targetPos, targetRot);
     }
 }

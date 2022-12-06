@@ -9,6 +9,8 @@ public class MorsePrinter : MonoBehaviour
     private MorseInterpreter _interpreter;
 
     [Space]
+    public UnityEvent<char> OnEnteredLetter = new UnityEvent<char>();
+    [Space]
     public UnityEvent<string> OnFinishedWord = new UnityEvent<string>();
 
     private string _currentWord = "";
@@ -33,6 +35,7 @@ public class MorsePrinter : MonoBehaviour
     public void AppendToCurrentWord(char character)
     {
         _currentWord += character;
+        OnEnteredLetter.Invoke(character);
         Debug.Log(_currentWord);
     }
 
