@@ -10,13 +10,13 @@ public class GameTimer : MonoBehaviour
     public TextMeshProUGUI TimerText;
 
     [SerializeField] float Timer;
-    private bool startTimer = false;
+    private bool endGame = false;
 
-    public GameObject gameOverPanel;
+    public GameObject youWinPanel;
     
     void Start()
     {
-        gameOverPanel.SetActive(false); 
+        youWinPanel.SetActive(false); 
     }
 
     // Update is called once per frame
@@ -27,25 +27,28 @@ public class GameTimer : MonoBehaviour
 
     public void SetTimer(bool result)
     {
-        startTimer = result;
+        endGame = result;
     }
 
 
     public void puzzleTimer()
     {
-        if (!startTimer)
-            return;
-
-        Timer -= Time.deltaTime;
-        int minutes = Mathf.FloorToInt(Timer / 60f);
-        int seconds = Mathf.FloorToInt(Timer % 60f);
-        int milliseconds = Mathf.FloorToInt((Timer * 100f) % 100f);
-        TimerText.text = minutes.ToString("00") + ":" + seconds.ToString("00") + ":" + milliseconds.ToString("00");
-
-        if (Timer <=0)
+       if (!endGame)
         {
-            Timer = 0;
-            gameOverPanel.SetActive(true);            
+            Timer += Time.deltaTime;
+            int minutes = Mathf.FloorToInt(Timer / 60f);
+            int seconds = Mathf.FloorToInt(Timer % 60f);
+            int milliseconds = Mathf.FloorToInt((Timer * 100f) % 100f);
+            TimerText.text = minutes.ToString("00") + ":" + seconds.ToString("00") + ":" + milliseconds.ToString("00");
         }
+
+        else
+        {
+            youWinPanel.SetActive(true);   
+        }
+       
+
+       
+       
     }
 }
