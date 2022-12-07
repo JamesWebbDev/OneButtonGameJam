@@ -10,6 +10,12 @@ public class InputManager : Singleton<InputManager>
     public delegate void StartTelegraphInput(bool isPressing);
     public event StartTelegraphInput OnStartTelegraphInput;
 
+    public delegate void StartRestart();
+    public event StartRestart OnStartRestart;
+
+    public delegate void StartQuit();
+    public event StartQuit OnStartQuit;
+
     private InputControls controls;
 
     new void Awake()
@@ -33,6 +39,9 @@ public class InputManager : Singleton<InputManager>
     {
         controls.Player.TelegraphInput.started += PressInput;
         controls.Player.TelegraphInput.canceled += ReleaseInput;
+
+        controls.Player.Restart.started += Restart;
+        controls.Player.Quit.started += Quit;
     }
 
     #region Successful Inputs
@@ -49,6 +58,20 @@ public class InputManager : Singleton<InputManager>
         if (OnStartTelegraphInput == null) return;
 
         OnStartTelegraphInput(false);
+    }
+
+    private void Restart(InputAction.CallbackContext context)
+    {
+        if (OnStartRestart == null) return;
+
+        OnStartRestart();
+    }
+
+    private void Quit(InputAction.CallbackContext context)
+    {
+        if (OnStartQuit == null) return;
+
+        OnStartQuit();
     }
 
 

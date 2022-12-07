@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -32,6 +33,9 @@ public class GameManager : Singleton<GameManager>
     {
         if (_printer != null)
             _printer.OnFinishedWord.AddListener(CheckIfWordMatchesTarget);
+
+        InputManager.Instance.OnStartRestart += RestartScene;
+        InputManager.Instance.OnStartQuit += QuitGame;
     }
 
     private void OnDisable()
@@ -40,6 +44,9 @@ public class GameManager : Singleton<GameManager>
             _printer.OnFinishedWord.RemoveListener(CheckIfWordMatchesTarget);
     }
 
+    public void RestartScene() => SceneManager.LoadScene(0);
+
+    public void QuitGame() => Application.Quit();
 
 
     private void Start()

@@ -30,7 +30,6 @@ public class GameTimer : MonoBehaviour
         endGame = result;
     }
 
-
     public void puzzleTimer()
     {
        if (!endGame)
@@ -45,6 +44,7 @@ public class GameTimer : MonoBehaviour
         else
         {
             youWinPanel.SetActive(true);   
+
         }
        
 

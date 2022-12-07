@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CameraMove : MonoBehaviour
 {
     public Transform _doorTransform;
     private Transform _setTransform;
     public float _moveTime = 2f;
+    public int maxCameraMoves = 3;
+    private int currentMoves = 0;
+
+    public UnityEvent _endMoveEvent = new UnityEvent();
 
     public void MovingCamera(Transform t)
     {
@@ -35,7 +40,16 @@ public class CameraMove : MonoBehaviour
 
         transform.SetPositionAndRotation(targetPos, targetRot);
 
-        
+        CheckToTriggerEvent();
+    }
+
+    void CheckToTriggerEvent()
+    {
+        currentMoves++;
+
+        if (currentMoves == maxCameraMoves)
+            _endMoveEvent.Invoke();
+
     }
 
     IEnumerator MoveCameraToDoor()

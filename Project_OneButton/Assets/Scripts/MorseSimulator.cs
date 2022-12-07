@@ -42,7 +42,7 @@ public class MorseSimulator : MonoBehaviour
         _dotDuration = _unitValue;
         _dashDuration = _unitValue * 3;
         _letterDuration = _unitValue * 3;
-        _resetDuration = _unitValue * 7;
+        _resetDuration = _unitValue * 10;
     }
 
     private void Start()

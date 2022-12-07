@@ -8,6 +8,13 @@ public class MorseInterpreter : Singleton<MorseInterpreter>
 {
     private InputManager _inputManager;
 
+    [Space]
+    public UnityEvent OnDownInput = new UnityEvent();
+    [Space]
+    public UnityEvent OnDot = new UnityEvent();
+    [Space]
+    public UnityEvent OnDash = new UnityEvent();
+    
     public UnityEvent<char> OnNewLetter { get; private set; } = new UnityEvent<char>();
     public UnityEvent OnClearWord { get; private set; } = new UnityEvent();
 
@@ -26,8 +33,8 @@ public class MorseInterpreter : Singleton<MorseInterpreter>
     private float _dashDuration = 0.75f;
     [Tooltip("Player must not input until this time has passed to start the next LETTER, MUST be greater than 'Dash Duration'!")]
     private float _letterDuration = 0.75f;
-    [Tooltip("Player must not input until this time has passed to start the next WORD, MUST be greater than 'Letter Duration'!")]
-    private float _wordDuration = 1.75f;
+    //[Tooltip("Player must not input until this time has passed to start the next WORD, MUST be greater than 'Letter Duration'!")]
+    public float _wordDuration { get; private set; } = 1.75f;
 
     [Header("Visual/Auditory")]
     private AudioSource _telegraphActiveSound;
@@ -84,7 +91,9 @@ public class MorseInterpreter : Singleton<MorseInterpreter>
             _nextWord = null;
         }
 
+        OnDownInput.Invoke();
         _telegraphActiveSound?.Play();
+
         _inputTime = Time.realtimeSinceStartup;
     }
 
@@ -143,6 +152,7 @@ public class MorseInterpreter : Singleton<MorseInterpreter>
     {
         Debug.Log($"Input 'Dot'");
         _currentLetter += 0;
+        OnDot.Invoke();
         _nextLetter = StartCoroutine(TimeTillNextLetter());
     }
 
@@ -150,6 +160,7 @@ public class MorseInterpreter : Singleton<MorseInterpreter>
     {
         Debug.Log($"Input 'Dash'");
         _currentLetter += 1;
+        OnDash.Invoke();
         _nextLetter = StartCoroutine(TimeTillNextLetter());
     }
 
