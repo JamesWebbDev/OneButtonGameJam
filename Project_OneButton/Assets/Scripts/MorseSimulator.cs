@@ -8,6 +8,8 @@ public class MorseSimulator : MonoBehaviour
 {
     private MorseInterpreter _interpreter;
 
+    [SerializeField] bool _startOnAwake = false;
+
     [Header("Timed Values")]
     [SerializeField] float _unitValue = 0.25f;
     private float _nautDuration;
@@ -24,6 +26,10 @@ public class MorseSimulator : MonoBehaviour
     private Dictionary<char, string> _reversedMorseDictionary;
 
     [Space]
+    public UnityEvent OnDot = new UnityEvent();
+    [Space]
+    public UnityEvent OnDash = new UnityEvent();
+    [Space]
     public UnityEvent OnState = new UnityEvent();
     [Space]
     public UnityEvent OffState = new UnityEvent();
@@ -32,11 +38,6 @@ public class MorseSimulator : MonoBehaviour
 
     private void Awake()
     {
-        _interpreter = MorseInterpreter.Instance;
-
-        _reversedMorseDictionary = _interpreter.MorseDictionary.Reverse();
-        SetMorseOrder();
-
         _nautDuration = _unitValue;
         _dotDuration = _unitValue;
         _dashDuration = _unitValue * 3;
@@ -51,10 +52,17 @@ public class MorseSimulator : MonoBehaviour
         _reversedMorseDictionary = _interpreter.MorseDictionary.Reverse();
         SetMorseOrder();
 
-        SetTargetWordQueue();
+        if (_startOnAwake) StartSimulator();
     }
 
-    public void SetTargetWordQueue()
+    public void StartSimulator()
+    {
+        SetTargetWordQueue();
+
+        StartCoroutine(TimeNaut());
+    }
+
+    void SetTargetWordQueue()
     {
         _targetWordQueue = new Queue<IEnumerator>();
 
@@ -62,9 +70,6 @@ public class MorseSimulator : MonoBehaviour
         {
             _targetWordQueue.Enqueue(GetCorrectTimer(_morseTarget[i]));
         }
-
-        StartCoroutine(TimeNaut());
-
     }
 
     void SetMorseOrder()
@@ -138,6 +143,7 @@ public class MorseSimulator : MonoBehaviour
     IEnumerator TimeDot()
     {
         _onState = true;
+        OnDot.Invoke();
         OnState.Invoke();
 
         yield return Helper.GetWait(_dotDuration);
@@ -148,6 +154,7 @@ public class MorseSimulator : MonoBehaviour
     IEnumerator TimeDash()
     {
         _onState = true;
+        OnDash.Invoke();
         OnState.Invoke();
 
         yield return Helper.GetWait(_dashDuration);
@@ -197,7 +204,7 @@ public class MorseSimulator : MonoBehaviour
     {
         yield return Helper.GetWait(_resetDuration);
 
-        SetTargetWordQueue();
+        StartSimulator();
     }
 
 }

@@ -36,6 +36,39 @@
                     "action": "TelegraphInput",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ef9ad393-ad63-4e1f-9e84-27fb7f5aca8a",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TelegraphInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4a08f234-19d5-409a-911f-8131fa57a886",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TelegraphInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dfd66efe-c22a-4e4c-8285-60c5a91a5239",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TelegraphInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
