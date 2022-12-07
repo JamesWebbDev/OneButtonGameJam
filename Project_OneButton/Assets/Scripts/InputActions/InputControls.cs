@@ -101,6 +101,17 @@ public class @InputControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""7b6d4100-ac15-484a-b0ee-a8d23bc9cd31"",
+                    ""path"": ""<Touchscreen>/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TelegraphInput"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""b0de7fa8-956e-4de3-b565-1801c0c9d3a8"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
